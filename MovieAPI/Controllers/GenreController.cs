@@ -10,7 +10,7 @@ namespace MovieAPI.Controllers
 {
     [Route("api/genres")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class GenreController : ControllerBase
     {
         private readonly IGenreService _genreServices;

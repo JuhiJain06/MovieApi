@@ -9,7 +9,7 @@ namespace MovieAPI.Controllers
 {
     [Route("api/movies")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class MovieController : ControllerBase
     {
        private readonly IMovieService _movieServices;
