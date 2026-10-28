@@ -9,7 +9,7 @@ namespace MovieAPI.Controllers
 {
     [Route("api/movies/{movieId}/reviews")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class ReviewController : ControllerBase
     {
         private readonly IReviewService _reviewServices;
