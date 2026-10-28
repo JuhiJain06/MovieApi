@@ -9,7 +9,7 @@ namespace MovieAPI.Controllers
 {
     [Route("api/producers")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     public class ProducerController : ControllerBase
     {
         private readonly IProducerService _producerServices;

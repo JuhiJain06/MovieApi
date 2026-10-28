@@ -10,7 +10,7 @@ namespace MovieAPI.Controllers
 {
     [Route("api/actors")]
     [ApiController]
-    [AllowAnonymous]
+    [Authorize]
     
     public class ActorController : ControllerBase
     {
