@@ -21,7 +21,7 @@ SELECT [Id]
 	,[Name]
 	,[Email]
 	,[Password]
-FROM [Users](NOLOCK)
+FROM [Users]
 WHERE Email=@Email";
 
             return await base.QueryFirstOrDefaultAsync<User>(query,new {Email=email});
