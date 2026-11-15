@@ -45,7 +45,7 @@ SELECT m.Id
 	,m.Poster AS [ImageUrl]
 	,STRING_AGG(am.ActorId, ',') AS [ActorIds]
 	,STRING_AGG(gm.GenreId, ',') AS [GenreIds]
-FROM Movies m   WITH (NOLOCK)
+FROM Movies m
 INNER JOIN Actors_Movies am ON am.MovieId = m.Id
 INNER JOIN Genres_Movies gm ON gm.MovieId = m.Id
 GROUP BY m.Id
@@ -69,7 +69,7 @@ SELECT m.Id
 	,m.Poster AS [ImageUrl]
 	,STRING_AGG(am.ActorId, ',') AS [ActorIds]
 	,STRING_AGG(gm.GenreId, ',') AS [GenreIds]
-FROM Movies m WITH (NOLOCK)
+FROM Movies m
 INNER JOIN Actors_Movies am ON am.MovieId = m.Id
 INNER JOIN Genres_Movies gm ON gm.MovieId = m.Id
 WHERE m.Id = @Id

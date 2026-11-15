@@ -58,7 +58,7 @@ SELECT [Id]
 	,[Gender]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Producers](NOLOCK) ";
+FROM [Producers] ";
 
             return await base.QueryAsync<Producer>(query);
         }
@@ -73,7 +73,7 @@ SELECT [Id]
 	,[Gender]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Producers](NOLOCK) 
+FROM [Producers] 
 WHERE Id=@Id";
             return await base.QueryFirstOrDefaultAsync<Producer>(query, new { Id = id });
         }
