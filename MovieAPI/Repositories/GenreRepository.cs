@@ -19,7 +19,7 @@ namespace MovieAPI.Repositories
             const string query = @"
 SELECT g.Id
 	,g.Name
-FROM Genres g WITH (NOLOCK)
+FROM Genres g
 WHERE g.Id IN @Ids;";
 
             return await base.QueryAsync<GenreResponseModel>(query,new {Ids= ids});
@@ -62,7 +62,7 @@ SELECT [Id]
 	,[Name]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Genres](NOLOCK) ";
+FROM [Genres] ";
 
             return await base.QueryAsync<Genre>(query);
         }
@@ -74,7 +74,7 @@ SELECT [Id]
 	,[Name]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Genres](NOLOCK) 
+FROM [Genres] 
 WHERE Id=@Id";
 
             return await base.QueryFirstOrDefaultAsync<Genre>(query, new { Id = id });

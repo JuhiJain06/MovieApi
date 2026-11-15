@@ -50,7 +50,7 @@ SELECT [Id]
 	,[Message]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Reviews](NOLOCK) 
+FROM [Reviews] 
 WHERE MovieId=@MovieId";
 
             return await base.QueryAsync<Review>(query, new { MovieId = movieId });
@@ -63,7 +63,7 @@ SELECT [Id]
 	,[Message]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Reviews](NOLOCK)
+FROM [Reviews]
 WHERE Id = @Id
 	AND MovieId = @MovieId";
             return await base.QueryFirstOrDefaultAsync<Review>(query, new { Id = id, MovieId = movieId });
