@@ -23,7 +23,7 @@ SELECT a.Id
 	,a.DateOfBirth
 	,a.Gender
 	,a.Bio
-FROM Actors a WITH (NOLOCK)
+FROM Actors a
 WHERE a.Id IN @Ids;";
 
             return await base.QueryAsync<ActorResponseModel>(query, new {Ids=ids});
@@ -79,7 +79,7 @@ SELECT [Id]
 	,[Gender]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Actors](NOLOCK) ";
+FROM [Actors] ";
             
             return await base.QueryAsync<Actor>(query);
         }
@@ -94,7 +94,7 @@ SELECT [Id]
 	,[Gender]
     ,[CreatedAt]
     ,[UpdatedAt]
-FROM [Actors](NOLOCK) 
+FROM [Actors] 
 WHERE Id=@Id";
             return await base.QueryFirstOrDefaultAsync<Actor>(query, new { Id=id });
         }
