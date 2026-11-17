@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using MovieAPI.Exceptions;
 using System;
@@ -8,8 +8,11 @@ namespace MovieAPI.Middleware
 {
     public class GlobalExceptionHandlingMiddleware
     {
+        private const string GenericErrorMessage = "An unexpected error occurred.";
+
         private readonly RequestDelegate _next;
         private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
+
         public GlobalExceptionHandlingMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             _next = next;
@@ -22,36 +25,43 @@ namespace MovieAPI.Middleware
             {
                 await _next(context);
             }
-
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                _logger.LogError(ex, " An Error has occured.");
-                context.Response.ContentType = "application/json";
-
-                switch (ex)
+                // Once the response has started we can no longer change the status code or body.
+                if (context.Response.HasStarted)
                 {
-                    case NotFoundException:
-                        context.Response.StatusCode=StatusCodes.Status404NotFound; break;
-
-                    case UnauthorizedException:
-                        context.Response.StatusCode=StatusCodes.Status401Unauthorized; break;
-
-                    case BadRequestException:
-                        context.Response.StatusCode=StatusCodes.Status400BadRequest; break;
-
-                    default:
-                        context.Response.StatusCode =StatusCodes.Status500InternalServerError; break;
+                    _logger.LogError(ex, "Unhandled exception after the response started on {Path}", context.Request.Path);
+                    throw;
                 }
 
-                var response = new
+                var (statusCode, message) = ex switch
                 {
-                    StatusCode = context.Response.StatusCode,
-                    Message = ex.Message
+                    NotFoundException => (StatusCodes.Status404NotFound, ex.Message),
+                    UnauthorizedException => (StatusCodes.Status401Unauthorized, ex.Message),
+                    BadRequestException => (StatusCodes.Status400BadRequest, ex.Message),
+                    // Never expose internal details (SQL errors, stack info, etc.) to the client.
+                    _ => (StatusCodes.Status500InternalServerError, GenericErrorMessage)
                 };
 
-                await context.Response.WriteAsJsonAsync(response);
-            }
+                if (statusCode >= StatusCodes.Status500InternalServerError)
+                {
+                    _logger.LogError(ex, "Unhandled exception on {Method} {Path}", context.Request.Method, context.Request.Path);
+                }
+                else
+                {
+                    _logger.LogWarning("{StatusCode} on {Method} {Path}: {Message}", statusCode, context.Request.Method, context.Request.Path, ex.Message);
+                }
 
+                context.Response.Clear();
+                context.Response.StatusCode = statusCode;
+                context.Response.ContentType = "application/json";
+
+                await context.Response.WriteAsJsonAsync(new
+                {
+                    StatusCode = statusCode,
+                    Message = message
+                });
+            }
         }
     }
 }
