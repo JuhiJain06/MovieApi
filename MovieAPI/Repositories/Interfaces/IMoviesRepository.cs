@@ -9,6 +9,7 @@ namespace MovieAPI.Repositories.Interfaces
     {
         Task<IEnumerable<MovieDTO>> Get();
         Task<MovieDTO> Get(int id);
+        Task<bool> Exists(int id);
         Task<int> Add(MovieDTO movie);
         Task Delete(int id);
         Task Update(MovieDTO movie);

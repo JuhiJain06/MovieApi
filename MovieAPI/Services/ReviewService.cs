@@ -14,14 +14,26 @@ namespace MovieAPI.Services
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
+        private readonly IMoviesRepository _moviesRepository;
 
-        public ReviewService(IReviewRepository reviewRepository)
+        public ReviewService(IReviewRepository reviewRepository, IMoviesRepository moviesRepository)
         {
             _reviewRepository = reviewRepository;
+            _moviesRepository = moviesRepository;
         }
 
         public async Task<int> Add(int movieId,ReviewRequestModel request)
         {
+            if (movieId < 1)
+            {
+                throw new BadRequestException("Invalid movie");
+            }
+
+            if (!await _moviesRepository.Exists(movieId))
+            {
+                throw new NotFoundException("Movie not found");
+            }
+
             var review = new Review()
             {
                 MovieId=movieId,

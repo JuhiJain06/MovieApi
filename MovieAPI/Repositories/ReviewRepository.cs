@@ -37,9 +37,10 @@ VALUES (
             const string query = @"
 DELETE
 FROM Reviews
-WHERE Id = @Id";
+WHERE Id = @Id
+	AND MovieId = @MovieId";
 
-            await base.ExecuteAsync(query, new { Id = review.Id });
+            await base.ExecuteAsync(query, new { Id = review.Id, MovieId = review.MovieId });
         }
 
 
@@ -61,6 +62,7 @@ WHERE MovieId=@MovieId";
             const string query = @"
 SELECT [Id]
 	,[Message]
+	,[MovieId]
     ,[CreatedAt]
     ,[UpdatedAt]
 FROM [Reviews]
@@ -75,7 +77,8 @@ WHERE Id = @Id
 UPDATE Reviews
 SET Message = @Message
 	,UpdatedAt = @UpdatedAt
-WHERE Id = @Id";
+WHERE Id = @Id
+	AND MovieId = @MovieId";
 
             await base.ExecuteAsync(query, review);
         }

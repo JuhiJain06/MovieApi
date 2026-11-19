@@ -13,6 +13,19 @@ namespace MovieAPI.Repositories
             : base(configuration)
         {
         }
+
+        public async Task<bool> Exists(int id)
+        {
+            const string query = @"
+SELECT CAST(CASE
+		WHEN EXISTS (SELECT 1 FROM Movies WHERE Id = @Id)
+			THEN 1
+		ELSE 0
+		END AS BIT);";
+
+            return await base.ExecuteScalarAsync<bool>(query, new { Id = id });
+        }
+
         public async Task<int> Add(MovieDTO movie)
         {
 
